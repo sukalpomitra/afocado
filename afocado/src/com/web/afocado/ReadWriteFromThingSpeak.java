@@ -66,7 +66,7 @@ public class ReadWriteFromThingSpeak extends HttpServlet {
 
 		try {
 			String feedView = getServletContext().getInitParameter(Utils.VIEWFEED);
-			String apiKey = getServletContext().getInitParameter(Utils.APIKEY);
+			String apiKey = getServletContext().getInitParameter(Utils.READAPIKEY);
 			URL url = new URL(feedView + "?key=" + apiKey);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
@@ -95,6 +95,10 @@ public class ReadWriteFromThingSpeak extends HttpServlet {
 				gyro.add(feed.get("field3").toString().replace("g:", ""));
 			}
 
+			int computedGait = computeGait(null, null, null);
+			if (computedGait != -999999)
+				postData(computedGait);
+
 		} catch (MalformedURLException e) {
 
 			e.printStackTrace();
@@ -104,6 +108,31 @@ public class ReadWriteFromThingSpeak extends HttpServlet {
 			e.printStackTrace();
 
 		}
+	}
+
+	public int computeGait(final String compass, final String accelerometer, final String gyro)
+	{
+		return -999999;
+	}
+
+	public void postData(final int computedGait) throws IOException
+	{
+		String feedWrite = getServletContext().getInitParameter(Utils.WRITEFEED);
+		String apiKey = getServletContext().getInitParameter(Utils.WRITEAPIKEY);
+		URL url = new URL(feedWrite + "?key=" + apiKey + "&field=" + computedGait);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("Accept", "application/json");
+
+		if (conn.getResponseCode() != 200) {
+			throw new RuntimeException("Failed : HTTP error code : "
+					+ conn.getResponseCode());
+		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				(conn.getInputStream())));
+
+		conn.disconnect();
 	}
 
 

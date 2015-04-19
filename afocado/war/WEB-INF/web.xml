@@ -5,21 +5,31 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
-		<servlet-name>ReadFromThingSpeak</servlet-name>
-		<servlet-class>com.web.afocado.ReadFromThingSpeak</servlet-class>
+		<servlet-name>ReadWriteFromThingSpeak</servlet-name>
+		<servlet-class>com.web.afocado.ReadWriteFromThingSpeak</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>ReadFromThingSpeak</servlet-name>
-		<url-pattern>/readFromThingSpeak</url-pattern>
+		<servlet-name>ReadWriteFromThingSpeak</servlet-name>
+		<url-pattern>/readWriteFromThingSpeak</url-pattern>
 	</servlet-mapping>
 	
 	<context-param>
-     	<param-name>APIKey</param-name>
+     	<param-name>readAPIKey</param-name>
     	<param-value>9Z8XFH4993CUGH3V</param-value>
     </context-param>
 	
 	<context-param>
      	<param-name>viewFeed</param-name>
     	<param-value>http://api.thingspeak.com/channels/34503/feed.json</param-value>
+    </context-param>
+    
+    <context-param>
+     	<param-name>writeAPIKey</param-name>
+    	<param-value>75288HQ6LUOKD11M</param-value>
+    </context-param>
+	
+	<context-param>
+     	<param-name>writeFeed</param-name>
+    	<param-value>https://api.thingspeak.com/update</param-value>
     </context-param>
 </web-app>
