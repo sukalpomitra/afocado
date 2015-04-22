@@ -84,20 +84,18 @@ public class ReadWriteFromThingSpeak extends HttpServlet {
 			conn.disconnect();
 			JSONArray feeds = (JSONArray) json.get("feeds");
 
-			List<String> compass = new ArrayList<String>();
 			List<String> accelerometer = new ArrayList<String>();
-			List<String> gyro = new ArrayList<String>();
 
 			for(int i = 0 ; i < feeds.size() ; i++){
 				JSONObject feed = (JSONObject)feeds.get(i);
-				compass.add(feed.get("field1").toString().replace("c:", ""));
-				accelerometer.add(feed.get("field2").toString().replace("a:", ""));
-				gyro.add(feed.get("field3").toString().replace("g:", ""));
+				accelerometer.add(feed.get("field1").toString().replace("a:", ""));
 			}
-
-			int computedGait = computeGait(null, null, null);
-			if (computedGait != -999999)
-				postData(computedGait);
+			if (feeds.size() > 0)
+			{
+				ComputeSteps compute = new ComputeSteps();
+				int steps = compute.computeSteps(accelerometer);
+				postData(steps);
+			}
 
 		} catch (MalformedURLException e) {
 
@@ -108,11 +106,6 @@ public class ReadWriteFromThingSpeak extends HttpServlet {
 			e.printStackTrace();
 
 		}
-	}
-
-	public int computeGait(final String compass, final String accelerometer, final String gyro)
-	{
-		return -999999;
 	}
 
 	public void postData(final int computedGait) throws IOException
