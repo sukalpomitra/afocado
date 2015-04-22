@@ -5,13 +5,9 @@ import java.util.List;
 
 public class ComputeSteps {
 
-	public int computeSteps(final List<String> accelerometer)
+	public int computeSteps(final List<Double> accX, final List<Double> accY, final List<Double> accZ)
 	{
 		int steps = 0;
-		//Get accelerometer values
-		List<Float> accX = convertListFromStringToFloat(accelerometer, Utils.X);
-		List<Float> accY = convertListFromStringToFloat(accelerometer, Utils.Y);
-		List<Float> accZ = convertListFromStringToFloat(accelerometer, Utils.Z);
 
 		//Calculate the accelerometer magnitude
 		List<Double> magnitude = calculateAccMagnitude(accX, accY, accZ);
@@ -34,7 +30,7 @@ public class ComputeSteps {
 	}
 
 
-	protected List<Double> calculateAccMagnitude(final List<Float> accX, final List<Float> accY, final List<Float> accZ)
+	protected List<Double> calculateAccMagnitude(final List<Double> accX, final List<Double> accY, final List<Double> accZ)
 	{
 		List<Double> magnitude = new ArrayList<Double>();
 		for (int i = 0; i <= accX.size() - 1; i++)
