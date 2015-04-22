@@ -84,16 +84,20 @@ public class ReadWriteFromThingSpeak extends HttpServlet {
 			conn.disconnect();
 			JSONArray feeds = (JSONArray) json.get("feeds");
 
-			List<String> accelerometer = new ArrayList<String>();
+			List<Double> accX = new ArrayList<Double>();
+			List<Double> accY = new ArrayList<Double>();
+			List<Double> accZ = new ArrayList<Double>();
 
 			for(int i = 0 ; i < feeds.size() ; i++){
 				JSONObject feed = (JSONObject)feeds.get(i);
-				accelerometer.add(feed.get("field1").toString().replace("a:", ""));
+				accX.add(Double.parseDouble(feed.get("field1").toString()));
+				accY.add(Double.parseDouble(feed.get("field2").toString()));
+				accZ.add(Double.parseDouble(feed.get("field3").toString()));
 			}
 			if (feeds.size() > 0)
 			{
 				ComputeSteps compute = new ComputeSteps();
-				int steps = compute.computeSteps(accelerometer);
+				int steps = compute.computeSteps(accX, accY, accZ);
 				postData(steps);
 			}
 
@@ -112,7 +116,7 @@ public class ReadWriteFromThingSpeak extends HttpServlet {
 	{
 		String feedWrite = getServletContext().getInitParameter(Utils.WRITEFEED);
 		String apiKey = getServletContext().getInitParameter(Utils.WRITEAPIKEY);
-		URL url = new URL(feedWrite + "?key=" + apiKey + "&field=" + computedGait);
+		URL url = new URL(feedWrite + "?key=" + apiKey + "&field1=" + computedGait);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Accept", "application/json");
